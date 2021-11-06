@@ -54,10 +54,26 @@ public final class allCommandClass {
     }
 
     public static void login() throws FileNotFoundException {
+        // if someone is logged in after executing login method
+        // first we need to log every one out.
         Helper.LogOutEveryOne(fileName);
 
+        // this two lines of code compares
+        // input values to username value and password value.
         String usernamePar = userNameParam();
         String passwordPar = passwordParam();
+
+        // if username or password is incorrect
+        // it shows the message and executes himself.
+        if (usernamePar == null){
+            Helper.println("Username is not correct!");
+            login();
+        }
+        else if (passwordPar == null)
+        {
+            Helper.println("password is not correct!");
+            login();
+        }
 
         if (usernamePar != null && passwordPar != null){
             User myUser = Factory.createUserOBJ(usernamePar, passwordPar);
@@ -67,9 +83,12 @@ public final class allCommandClass {
     }
 
     public static void logOutUser() throws FileNotFoundException {
+        // inside the list of Strings are all lines of text file.
         List<String> allLines = new ArrayList<>();
         insertAllLinesIntoList(fileName, allLines);
 
+        // in this fragment of code, we remove all extra spaces
+        // and the Dot: Which indicates user is logged in.
         String loggedInUser = "";
         int iterator = 0;
         for (String element: allLines) {
@@ -80,7 +99,10 @@ public final class allCommandClass {
             iterator++;
         }
 
+        // after that we're writing all the String lines inside the text file
         Helper.writeLinesIntoFile(fileName, allLines, false);
+
+        // in this fragment of code, we are finally checking, if user is still logged in or not
         if(!loggedInUser.equals(""))
             Helper.println("user: " + loggedInUser + " is logged out!");
     }
@@ -88,9 +110,12 @@ public final class allCommandClass {
     private static void isLoggedIn(User user)
             throws FileNotFoundException {
 
+        // inside the list of Strings are all lines of text file.
         List<String> allLines = new ArrayList<>();
         insertAllLinesIntoList(fileName, allLines);
 
+        // which user trying to logged in, we gave him 4 extra spaces and dot.
+        // that means that user saves with: username, password and dot.
         int iterator = 0;
         for (String element: allLines) {
             if(user.toString().equals(element))
@@ -98,10 +123,12 @@ public final class allCommandClass {
             iterator++;
         }
 
+        // after that we're writing all the String lines inside the text file
         Helper.writeLinesIntoFile(fileName, allLines, false);
     }
 
     private static String userNameParam() throws FileNotFoundException {
+        // this method trying to read input, which is username value.
         Scanner scanner = new Scanner(System.in);
         List<String> allLines = new ArrayList<>();
         Helper.insertAllLinesIntoList(fileName, allLines);
@@ -118,6 +145,7 @@ public final class allCommandClass {
     }
 
     private static String passwordParam() throws FileNotFoundException {
+        // this method trying to read input, which is username value.
         Scanner scanner = new Scanner(System.in);
         List<String> allLines = new ArrayList<>();
         Helper.insertAllLinesIntoList(fileName, allLines);
