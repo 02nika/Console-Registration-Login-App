@@ -51,6 +51,7 @@ public class Main {
                 allCommandClass.login();
                 break;
             case "registration":
+                Helper.println("Starting Registration...");
                 allCommandClass.registration();
                 break;
             case "log out":

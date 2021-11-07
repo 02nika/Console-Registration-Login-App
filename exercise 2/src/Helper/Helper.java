@@ -37,12 +37,12 @@ public final class Helper {
     }
 
     public static void LogOutEveryOne(String path) throws FileNotFoundException {
-        // first of all, we are trying to put all the lines in the list of string.
+        // first, we are trying to put all the lines in the list of string.
         List<String> allLines = new ArrayList<>();
         insertAllLinesIntoList(path, allLines);
 
         // after that we are parsing the lines of strings.
-        // we only keeping first and second word.
+        // we're only keeping first and second word.
         int iterator = 0;
         for (String element: allLines) {
             String[] arr = element.split("    ");
@@ -58,6 +58,19 @@ public final class Helper {
     public static void println(String text){
         // this println method help us to print every thing after this symbol: >
         System.out.println(" > " + text);
+    }
+
+    public static Boolean checkIfUserExits(String username){
+        List<String> allLines = new ArrayList();
+        insertAllLinesIntoList("Users.txt", allLines);
+
+        for (String element: allLines) {
+            String[] arr = element.split("    ");
+            if(arr[0].equals(username))
+                return true;
+        }
+
+        return false;
     }
 
 }
