@@ -7,6 +7,9 @@ import java.util.Scanner;
 
 public final class Factory {
     public static User createUserOBJFromTerminal(){
+        // this method listening the input.
+        // after that it creates User Class object.
+
         Scanner scanner = new Scanner(System.in);
         String username, password, input;
 

@@ -36,13 +36,16 @@ public class Main {
         }
 
         // goodbye message.
-        System.out.println("firewall!");
+        Helper.println("firewall!");
     }
 
-    private static void mySwitch(String text) throws FileNotFoundException {
+    public static void mySwitch(String text) throws FileNotFoundException {
         switch (text){
             case "help":
                 allCommandClass.help();
+                break;
+            case "status":
+                allCommandClass.status();
                 break;
             case "login":
                 allCommandClass.login();

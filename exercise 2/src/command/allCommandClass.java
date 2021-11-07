@@ -7,6 +7,7 @@ import User.User;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static Factory.Factory.createUserOBJFromTerminal;
@@ -19,6 +20,8 @@ public final class allCommandClass {
     public static void help(){
         System.out.println("in this terminal are some commands that you can use: ");
 
+        System.out.println(" - " + "help");
+        System.out.println(" - " + "status");
         System.out.println(" - " + "exit");
         System.out.println(" - " + "registration");
         System.out.println(" - " + "login");
@@ -65,13 +68,8 @@ public final class allCommandClass {
 
         // if username or password is incorrect
         // it shows the message and executes himself.
-        if (usernamePar == null){
-            Helper.println("Username is not correct!");
-            login();
-        }
-        else if (passwordPar == null)
-        {
-            Helper.println("password is not correct!");
+        if (usernamePar == null || passwordPar == null){
+            Helper.println("Username or Password is not correct!");
             login();
         }
 
@@ -107,6 +105,22 @@ public final class allCommandClass {
             Helper.println("user: " + loggedInUser + " is logged out!");
     }
 
+    public static void status(){
+        List<String> allLines = new ArrayList();
+        Helper.insertAllLinesIntoList(fileName, allLines);
+
+        int flag = 0;
+        for (String line : allLines) {
+            if(line.contains(".")){
+                Helper.println(line.split("    ")[0] + " is logged in!");
+                flag = 1;
+            }
+        }
+        if (flag == 0)
+            Helper.println("there is no one logged in!");
+
+    }
+
     private static void isLoggedIn(User user)
             throws FileNotFoundException {
 
@@ -136,6 +150,13 @@ public final class allCommandClass {
         Helper.println("enter Username:");
         System.out.print(" > ");
         String userN = scanner.nextLine();
+
+        if(userN.toLowerCase(Locale.ROOT).equals("exit")) {
+            // goodbye message.
+            Helper.println("firewall!");
+
+            System.exit(0);
+        }
 
         for (String line: allLines) {
             if(line.split("    ")[0].equals(userN))
