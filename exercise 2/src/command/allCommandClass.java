@@ -7,15 +7,10 @@ import User.User;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
 
-import static Factory.Factory.createUserOBJFromTerminal;
-import static Helper.Helper.insertAllLinesIntoList;
+import static Factory.Factory.*;
 
 public final class allCommandClass {
-
-    static final String fileName = "Users.txt";
 
     public static void help(){
         System.out.println("in this terminal are some commands that you can use: ");
@@ -27,159 +22,107 @@ public final class allCommandClass {
         System.out.println(" - " + "login");
     }
 
-    public static void registration() throws FileNotFoundException {
-        Helper.LogOutEveryOne(fileName);
-        try
-        {
-            //append into file connection.
-            PrintWriter outFileStream = new PrintWriter(new FileOutputStream(fileName, true));
+    public static List<User> registration(List<User> personsList) throws IOException, ClassNotFoundException {
+        personsList = logOutUser(personsList);
+        User user = enterUserOBJParamsFromTerm();
 
-            //create User class.
-            User student = createUserOBJFromTerminal();
-
-            //insert User into file and save file.
-            outFileStream.println(student);
-            outFileStream.close();
-
-            // add dot for registered user,
-            // p.s that means that which line has dotted.
-            // that line user is logged in.
-            isLoggedIn(student);
-
-            Helper.println("User registered successfully!");
-        }
-        catch (FileNotFoundException e)
-        {
-            System.out.println(e.getMessage());
-            System.out.println("Exception occurred..");
+        if(user.get_userName().equals("exit") || user.get_password().equals("exit")){
+            Helper.println("process stopped");
+            return personsList;
         }
 
+        if(Helper.contains(user.get_userName(), personsList)){
+            Helper.println("username already exist!");
+            registration(personsList);
+        }
+
+        Helper.println("user: " + user.get_userName() + " is registered successfully!");
+        personsList = Helper.registerUserHashed(user, personsList);
+
+        Helper.addListOfUsersIntoTheFile(personsList);
+
+        return personsList;
     }
 
-    public static void login() throws FileNotFoundException {
+    public static List<User> login(List<User> personsList)
+            throws IOException, ClassNotFoundException {
+
         // if someone is logged in after executing login method
-        // first we need to log every one out.
-        Helper.LogOutEveryOne(fileName);
+        // first we need to log everyone out.
+        personsList = logOutUser(personsList);
 
         // this two lines of code compares
         // input values to username value and password value.
-        String usernamePar = userNameParam();
-        String passwordPar = passwordParam();
+        String usernamePar = userNameParam(personsList);
+        String passwordPar = passwordParam(personsList);
 
         // if username or password is incorrect
         // it shows the message and executes himself.
         if (usernamePar == null || passwordPar == null){
             Helper.println("Username or Password is not correct!");
-            login();
+            login(personsList);
         }
 
+        // if "if statement" will be passed
+        // we are changing specific user's status and
+        // print into the console.
         if (usernamePar != null && passwordPar != null){
             User myUser = Factory.createUserOBJ(usernamePar, passwordPar);
-            isLoggedIn(myUser);
+            personsList = isLoggedIn(myUser, personsList);
+
+            Helper.addListOfUsersIntoTheFile(personsList);
             Helper.println("User '" + myUser.get_userName() + "' is logged in!");
         }
+        return personsList;
     }
 
-    public static void logOutUser() throws FileNotFoundException {
-        // inside the list of Strings are all lines of text file.
-        List<String> allLines = new ArrayList<>();
-        insertAllLinesIntoList(fileName, allLines);
+    public static List<User> logOutUser(List<User> personsList)
+            throws IOException, ClassNotFoundException {
 
-        // in this fragment of code, we remove all extra spaces
-        // and the Dot: Which indicates user is logged in.
-        String loggedInUser = "";
-        int iterator = 0;
-        for (String element: allLines) {
-            if(element.contains(".")){
-                allLines.set(iterator, element.substring(0, element.length()-5));
-                loggedInUser = element.split("    ")[0];
+        // in here we are taking all the old Users,
+        // but without logged in status.
+        List<User> newListOfPersons = new ArrayList<>();
+
+        for (User person: personsList) {
+            if(person.is_loggedIn()) {
+                person.set_loggedIn(false);
+                Helper.println(person.get_userName() + " is logged out.");
             }
-            iterator++;
+            newListOfPersons.add(person);
         }
 
-        // after that we're writing all the String lines inside the text file
-        Helper.writeLinesIntoFile(fileName, allLines, false);
+        // updating file.
+        Helper.addListOfUsersIntoTheFile(newListOfPersons);
 
-        // in this fragment of code, we are finally checking, if user is still logged in or not
-        if(!loggedInUser.equals(""))
-            Helper.println("user: " + loggedInUser + " is logged out!");
+        return newListOfPersons;
     }
 
-    public static void status(){
-        List<String> allLines = new ArrayList();
-        Helper.insertAllLinesIntoList(fileName, allLines);
+    public static void status(List<User> personsList){
 
+        // status tell's us if someone is logged in or not.
         int flag = 0;
-        for (String line : allLines) {
-            if(line.contains(".")){
-                Helper.println(line.split("    ")[0] + " is logged in!");
+        for (User person: personsList) {
+            if(person.is_loggedIn()){
+                Helper.println(person.get_userName() + " is logged in!");
                 flag = 1;
             }
         }
+
         if (flag == 0)
             Helper.println("there is no one logged in!");
-
     }
 
-    private static void isLoggedIn(User user)
-            throws FileNotFoundException {
+    private static List<User> isLoggedIn(User user, List<User> personsList) {
 
-        // inside the list of Strings are all lines of text file.
-        List<String> allLines = new ArrayList<>();
-        insertAllLinesIntoList(fileName, allLines);
-
-        // which user trying to logged in, we gave him 4 extra spaces and dot.
-        // that means that user saves with: username, password and dot.
-        int iterator = 0;
-        for (String element: allLines) {
-            if(user.toString().equals(element))
-                allLines.set(iterator, element + "    .");
-            iterator++;
+        // if users password and username is equal to persons list somebodies username and password
+        // we are setting logged in status to true.
+        for (User element: personsList) {
+            if((user.get_userName().equals(element.get_userName())) && (user.get_password().equals(element.get_password())))
+                element.set_loggedIn(true);
         }
 
-        // after that we're writing all the String lines inside the text file
-        Helper.writeLinesIntoFile(fileName, allLines, false);
+        return personsList;
     }
 
-    private static String userNameParam() throws FileNotFoundException {
-        // this method trying to read input, which is username value.
-        Scanner scanner = new Scanner(System.in);
-        List<String> allLines = new ArrayList<>();
-        Helper.insertAllLinesIntoList(fileName, allLines);
-
-        Helper.println("enter Username:");
-        System.out.print(" > ");
-        String userN = scanner.nextLine();
-
-        if(userN.toLowerCase(Locale.ROOT).equals("exit")) {
-            // goodbye message.
-            Helper.println("firewall!");
-
-            System.exit(0);
-        }
-
-        for (String line: allLines) {
-            if(line.split("    ")[0].equals(userN))
-                return userN;
-        }
-        return null;
-    }
-
-    private static String passwordParam() throws FileNotFoundException {
-        // this method trying to read input, which is username value.
-        Scanner scanner = new Scanner(System.in);
-        List<String> allLines = new ArrayList<>();
-        Helper.insertAllLinesIntoList(fileName, allLines);
-
-        Helper.println("enter Password:");
-        System.out.print(" > ");
-        String password = scanner.nextLine();
-
-        for (String line: allLines) {
-            if(line.split("    ")[1].equals(password))
-                return password;
-        }
-        return null;
-    }
 
 }
