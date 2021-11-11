@@ -32,7 +32,7 @@ public class Main {
             String input = scanner.nextLine();
 
             // searching the input text.
-            // user's input will become toLowerCase, so that means that case sensitive doesn't matter.
+            // user's input will become toLowerCase, so that means that case-sensitive doesn't matter.
             personsList = mySwitch(input.toLowerCase(Locale.ROOT), personsList);
 
             // after you enter "exit" command terminal loop breaks.
