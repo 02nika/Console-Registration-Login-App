@@ -1,6 +1,7 @@
 package Helper;
 
 import User.User;
+import command.allCommandClass;
 
 import java.io.*;
 import java.util.List;
@@ -21,8 +22,11 @@ public final class Helper {
         return false;
     }
 
-    public static List<User> registerUserHashed(User user, List<User> personsList) {
+    public static List<User> registerUserHashed(User user, List<User> personsList) throws IOException, ClassNotFoundException {
         user.set_loggedIn(true);
+
+        personsList = allCommandClass.logOutUser(personsList);
+
         personsList.add(user);
         return personsList;
     }

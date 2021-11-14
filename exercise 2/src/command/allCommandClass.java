@@ -20,6 +20,7 @@ public final class allCommandClass {
         System.out.println(" - " + "exit");
         System.out.println(" - " + "registration");
         System.out.println(" - " + "login");
+        System.out.println(" - " + "log out");
     }
 
     public static List<User> registration(List<User> personsList) throws IOException, ClassNotFoundException {

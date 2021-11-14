@@ -49,6 +49,8 @@ public class Main {
             throws IOException, ClassNotFoundException {
 
         switch (text){
+            case "":
+                break;
             case "help":
                 allCommandClass.help();
                 break;
