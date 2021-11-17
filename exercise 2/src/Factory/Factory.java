@@ -69,8 +69,7 @@ public final class Factory {
 
         System.out.print(" > ");
         String input = scanner.nextLine();
-        String text = input;
 
-        return  text;
+        return  input;
     }
 }
