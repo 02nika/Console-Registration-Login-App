@@ -57,6 +57,9 @@ public class Main {
             case "status":
                 allCommandClass.status(personsList);
                 break;
+            case "list":
+                System.out.println(personsList);
+                break;
             case "login":
                 personsList = allCommandClass.login(personsList);
                 break;

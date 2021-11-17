@@ -63,4 +63,14 @@ public final class Factory {
         }
         return null;
     }
+
+    public static String getTextFromTerminal(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print(" > ");
+        String input = scanner.nextLine();
+        String text = input;
+
+        return  text;
+    }
 }

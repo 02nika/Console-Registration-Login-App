@@ -42,6 +42,18 @@ public final class allCommandClass {
 
         Helper.addListOfUsersIntoTheFile(personsList);
 
+        Helper.println("Do you want to add another user?");
+        String answer = Factory.getTextFromTerminal();
+
+        if(answer.equals("yes"))
+            return registration(personsList);
+        else{
+            Helper.println("type list and see registered users.");
+            String text = Factory.getTextFromTerminal();
+            if(text.equals("list"))
+                System.out.println(personsList);
+        }
+
         return personsList;
     }
 
